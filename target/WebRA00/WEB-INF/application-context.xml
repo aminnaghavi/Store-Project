@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+<aop:aspectj-autoproxy/>
+       <bean id="logAspect" class="ir.store.Aspect.LoggingAspect" />
+    <bean id="purchaseLog" class="ir.store.Aspect.ItemManagedBeanAspect" />
+    <bean id="requestLog" class="ir.store.Aspect.RequestManagedBeanAspect" />
+
+    <context:component-scan base-package="ir"/>
+       <context:annotation-config/>
+       <context:spring-configured/>
+
+       <bean id="dataSource"  class="com.mchange.v2.c3p0.ComboPooledDataSource">
+              <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+              <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/storedb?useUnicode=true&amp;characterEncoding=UTF-8"/>
+              <property name="user" value="storeadmin"/>
+              <property name="password" value="123456"/>
+              <property name="maxPoolSize" value="2" />
+              <property name="maxStatements" value="0" />
+              <property name="minPoolSize" value="1" />
+       </bean>
+
+       <bean id="sessionFactory"
+             class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+              <property name="dataSource" ref="dataSource"/>
+              <property name="packagesToScan">
+                     <list>
+                            <value>ir.store.DAO.Entity</value>
+                            <value>ir.store.DAO.Impl</value>
+                     </list>
+              </property>
+              <property name="hibernateProperties">
+                     <props>
+                            <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                            <prop key="hibernate.show_sql">false</prop>
+                            <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/storedb</prop>
+                            <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+                            <prop key="hibernate.id.new_generator_mappings">false</prop>
+                            <prop key="hibernate.connection.CharSet">utf8</prop>
+                            <prop key="hibernate.connection.characterEncoding">utf8</prop>
+                            <prop key="hibernate.connection.useUnicode">true</prop>
+                            <prop key="hibernate.hbm2ddl.auto">update</prop>
+                     </props>
+              </property>
+       </bean>
+
+       <tx:annotation-driven transaction-manager="txManager"/>
+       <bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+              <property name="sessionFactory" ref="sessionFactory"/>
+       </bean>
+
+
+
+
+
+       <!--quartz-->
+       <bean name="someJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+              <property name="jobClass" value="ir.store.Job.QuartzJob" />
+
+       </bean>
+
+
+
+       <bean id="jobTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+              <property name="repeatInterval" value="10000" />
+              <property name="repeatCount" value="10000" />
+              <property name="jobDetail" ref="someJob" />
+       </bean>
+     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="jobTrigger" />
+            </list>
+        </property>
+    </bean>
+
+       <!--quartz-->
+       <!--
+       <bean id="agahiDao" class="ir.art.dao.AgahiDao">
+           <property name="sessionFactory" ref="sessionFactory"/>
+       </bean>
+
+       <bean id="dataService" class="ir.art.service.DataServices">
+           <property name="agahiDao" ref="agahiDao"></property>
+       </bean>
+
+       <bean id="test" class="ir.art.controller.test">
+           <property name="dataServices" ref="dataService"></property>
+       </bean>
+       -->
+
+</beans>

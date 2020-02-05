@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <h:outputScript name="jquery/jquery-plugins.js" library="primefaces"/>
+
+</h:head>
+<h:body>
+    <p:panelGrid style="width:100%" id="main_panel">
+        <p:row>
+            <p:column style="width:200px">
+                <p:panelGrid id="left_panel" columns="1">
+                    <p:outputLabel value="Hello #{userManagedBean.current_user.username} "/>
+                    <p:outputLabel value="last seen : #{userManagedBean.current_user.lastseen} "/>
+                    <p:outputLabel value="visit count : #{userManagedBean.current_user.visitcount} "/>
+                    <h:form>
+                    <p:dataGrid columns="1" id="left_links"  value="#{userManagedBean.leftpanelitems}" var="leftpanelitem" >
+                    <p:column>
+
+                        <p:link outcome="#{leftpanelitem.outcome}" value="#{leftpanelitem.value}"/>
+                    </p:column>
+
+
+                    </p:dataGrid>
+                    </h:form>
+                </p:panelGrid>
+
+            </p:column>
+            <p:column>
+                <p:panelGrid id="right_panel" width="100%">
+                    <p:row width="100%">
+                        <p:column width="100%">
+
+
+                            <h:form id="SearchForm" style="width:100%">
+                                    <p:panelGrid id="search_panel">
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="username"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText id="username" value="#{userManagedBean.searchUsername}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="name"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText id="name" value="#{userManagedBean.searchName}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:outputLabel value="lastname"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText id="lastname"  value="#{userManagedBean.searchLastname}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:commandButton value="Search" action="#{userManagedBean.searchUser()}"/>
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+
+                            </h:form>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:form>
+                            <p:commandButton id="new_user" action="#{userManagedBean.newUser}" value="New User +" update="@([id$=data_gridPanel])"/>
+                            </h:form>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:form id="data_form">
+                                <p:panelGrid id="data_gridpanel">
+                            <p:dataTable id="data_segment" var="user" filteredValue="#{userManagedBean.filteredusers}"  value="#{userManagedBean.users}">
+                                <p:column headerText="username">
+                                    <p:outputLabel value="#{user.username}"/>
+                                </p:column>
+                                <p:column headerText="name">
+                                    <p:outputLabel value="#{user.name}"/>
+                                </p:column>
+                                <p:column headerText="lastname">
+                                    <p:outputLabel value="#{user.lastname}"/>
+                                </p:column>
+                                <p:column headerText="email">
+                                    <p:outputLabel value="#{user.email}"/>
+                                </p:column>
+                                <p:column headerText="Action">
+                                    <p:commandButton value="show" action="#{userManagedBean.show(user)}" update=":data_form:data_segment"/>
+                                </p:column>
+                                <p:column headerText="Action">
+                                    <p:commandButton onclick="if (! confirm('Really want to do that?')) return false"
+                                                   value="delete" action="#{userManagedBean.delete(user)}"  update=":data_form:data_segment">
+                                        </p:commandButton>
+                                </p:column>
+                                <p:column headerText="Action">
+                                    <p:commandButton value="edit" action="#{userManagedBean.edit(user)}" update=":data_form:data_segment"/>
+                                </p:column>
+                            </p:dataTable>
+                                </p:panelGrid>
+                            </h:form>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+</h:body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <h:outputScript name="jquery/jquery-plugins.js" library="primefaces"/>
+</h:head>
+<h:body>
+    <h:form id="loginForm"  style="text-align: center;padding-top:100px;">
+        <p:panel id="mainPanel" align="center" style="text-align: center;">
+            <p:panelGrid id="gridMain">
+                <p:row>
+                    <p:column>
+                <p:outputLabel value="username" for="usernameInput"/>
+                    </p:column>
+                    <p:column>
+                    <p:inputText id="usernameInput" value="#{loginManagedBean.username}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                <p:outputLabel value="password" for="passwordInput"/>
+                    </p:column>
+                    <p:column>
+                    <p:inputText id="passwordInput" value="#{loginManagedBean.password}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2" style="text-align: center;" >
+                         <p:commandButton value="login" align="center"  action="#{loginManagedBean.login}" update="@([id$=result_label])"/>
+                    </p:column>
+                </p:row>
+                </p:panelGrid>
+        </p:panel>
+    </h:form>
+    <h:form id="dataGridForm">
+        <p:panel id="dataPanel">
+            <p:panelGrid id="dataGridPanel">
+                <p:outputLabel id="result_label" value="#{loginManagedBean.result}"/>
+            </p:panelGrid>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

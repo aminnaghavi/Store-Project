@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <h:outputScript name="jquery/jquery-plugins.js" library="primefaces"/>
+
+</h:head>
+<h:body>
+    <p:panelGrid style="width:100%" id="main_panel">
+        <p:row>
+            <p:column style="width:200px">
+                <p:panelGrid id="left_panel" columns="1">
+                    <p:outputLabel value="Hello #{itemManagedBean.current_user.username} "/>
+                    <p:outputLabel value="last seen : #{itemManagedBean.current_user.lastseen} "/>
+                    <p:outputLabel value="visit count : #{itemManagedBean.current_user.visitcount} "/>
+                    <h:form>
+                        <p:dataGrid columns="1" id="left_links"  value="#{itemManagedBean.leftpanelitems}" var="leftpanelitem" >
+                            <p:column>
+                                <p:link outcome="#{leftpanelitem.outcome}" value="#{leftpanelitem.value}"/>
+                            </p:column>
+
+
+                        </p:dataGrid>
+                    </h:form>
+                </p:panelGrid>
+
+            </p:column>
+            <p:column>
+                <p:panelGrid id="right_panel" width="100%">
+                    <p:row width="100%">
+                        <p:column width="100%">
+
+
+                            <h:form id="SearchForm" style="width:100%">
+                                <p:panelGrid id="search_panel">
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="status"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText id="status" value="#{requestManagedBean.searchStatus}"/>
+                                        </p:column>
+                                    </p:row>
+
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="item_model"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText id="item_model" value="#{requestManagedBean.searchItemModel}"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="item_name"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText id="item_name" value="#{requestManagedBean.searchItemName}"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:commandButton value="Search" action="#{requestManagedBean.searchRequest}"/>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+
+                            </h:form>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:form id="data_form">
+                                <p:panelGrid id="data_gridpanel">
+                                    <p:dataTable id="data_segment" var="requestdata" filteredValue="#{requestManagedBean.filteredrequests}"  value="#{requestManagedBean.requests}">
+                                        <p:column headerText="username">
+                                            <p:outputLabel value="#{requestdata.user.username}"/>
+                                        </p:column>
+
+                                        <p:column headerText="item name">
+                                            <p:outputLabel value="#{requestdata.item.name}"/>
+                                        </p:column>
+
+                                        <p:column headerText="item model">
+                                            <p:outputLabel value="#{requestdata.item.model}"/>
+                                        </p:column>
+                                        <p:column headerText="status">
+                                            <p:outputLabel value="#{requestdata.status}"/>
+                                        </p:column>
+                                        <p:column colspan="#{requestManagedBean.actionsNumber}" headerText="Actions">
+                                            <p:dataGrid columns="#{requestManagedBean.actionsNumber}" id="Actions_list"  value="#{requestManagedBean.itemActionsList}" var="actionItem" >
+                                                <p:column>
+                                                    <p:commandButton disabled="#{requestManagedBean.enableAction(requestdata)}" onclick="#{actionItem.onClickAction}" action="#{actionItem.action(requestdata)}" value="#{actionItem.name}" update=":data_form:data_segment"/>
+                                                </p:column>
+                                            </p:dataGrid>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panelGrid>
+                            </h:form>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+</h:body>
+</html>
